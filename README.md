@@ -10,7 +10,7 @@ This project demonstrates **data ingestion, cleaning, feature engineering, and v
 ## Key Insights
 
 ### Trip Distance
-[![Trip Distance Histogram](main/trip_distance_hist.png) ](https://raw.githubusercontent.com/hmaxim01/nyc_taxi/refs/heads/main/trip_distance_hist.png) 
+![Trip Distance Histogram](https://raw.githubusercontent.com/hmaxim01/nyc_taxi/main/figures/trip_distance_hist.png)
 - Most trips are **short (0–10 miles)**.  
 - Extremely long trips are rare and were filtered for clarity.
 
