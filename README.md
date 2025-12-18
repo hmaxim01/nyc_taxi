@@ -24,7 +24,7 @@ This project demonstrates **data ingestion, cleaning, feature engineering, and v
 - Tips cluster around **$0–$5**, with few larger tips.  
 
 ### Average Fare by Hour
-![Average Fare by Hour](figures/avg_fare_hour.png)  
+[![Average Fare by Hour](figures/avg_fare_hour.png) ](https://github.com/hmaxim01/nyc_taxi/commit/84e62f06e39426f7d95fb3bb7004e45e06acd205#diff-ac21e0f2eb145e702b7eaeb0ca260d4e4cf435ef550f075e442087dc83458198) 
 - Fares **peak during commuting hours** (8–9 AM, 5–6 PM).
 
 ### Trips by Weekday
