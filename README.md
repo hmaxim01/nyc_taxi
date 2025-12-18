@@ -1,4 +1,4 @@
-# NYC Yellow Taxi — Exploratory Data Analysis (EDA)
+# NYC Yellow Taxi — Exploratory Data Analysis (EDA) 
 
 ## Overview
 Analyzed **New York City Yellow Taxi trip data** (January 2025) to explore patterns in trip distances, fares, tips, and temporal trends.  
