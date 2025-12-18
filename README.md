@@ -55,6 +55,11 @@ This project demonstrates **data ingestion, cleaning, feature engineering, and v
    - Missing value counts  
    - Initial row inspection
 
+### Data Processing
+The original NYC TLC Parquet file is not included due to size. A reproducible
+100,000-row random sample was drawn using a fixed seed, cleaned, and saved as
+an RDS file for fast loading and transparency. The original file is accessible at https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page.
+
 ---
 
 ## Tools & Packages
