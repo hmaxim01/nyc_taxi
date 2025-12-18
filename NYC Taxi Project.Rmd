@@ -1,0 +1,141 @@
+---
+title: "Technical Assessment"
+output: html_document
+date: "2024-08-08"
+---
+
+```{r setup, include=FALSE}
+install.packages(c(
+  "arrow",
+  "dplyr",
+  "ggplot2",
+  "lubridate"
+))
+```
+
+```{r setup, message=FALSE, warning=FALSE}
+library(arrow)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+```
+
+```{r}
+taxi <- open_dataset(
+  "C:/Users/14045/OneDrive/Documents/Portfolio/NYC Taxi Data/yellow_tripdata_2025-01.parquet",
+  format = "parquet"
+)
+
+```
+
+```{r}
+#Setting seed for repicability
+set.seed(6)
+
+#Taking a random sample
+taxi_sample <- taxi %>%
+  select(
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    passenger_count,
+    trip_distance,
+    fare_amount,
+    total_amount
+  ) %>%
+   slice_sample(prop = 0.5) %>%
+  collect()
+```
+
+```{r}
+# Cleaning column names
+colnames(taxi_sample) <- tolower(gsub(" ", "_", colnames(taxi_sample)))
+```
+
+```{r}
+# 'Feature engineering'
+taxi_sample <- taxi_sample %>%
+mutate(
+pickup_time = as.POSIXct(tpep_pickup_datetime),
+dropoff_time = as.POSIXct(tpep_dropoff_datetime),
+hour = hour(pickup_time),
+weekday = wday(pickup_time, label = TRUE),
+trip_duration_min = as.numeric(difftime(dropoff_time, pickup_time, units = "mins"))
+)
+
+```
+
+```{r}
+#Summary statistics
+
+summary(taxi_sample)
+```
+
+```{r}
+# Count of missing values per column
+
+sapply(taxi_sample, function(x) sum(is.na(x)))
+
+```
+
+```{r}
+# Peek at first 10 rows
+
+head(taxi_sample, 10)
+
+```
+
+```{r}
+# Trip distance dist.
+ggplot(taxi_sample %>% filter(trip_distance > 0 & trip_distance <= 30),
+       aes(trip_distance)) +
+  geom_histogram(bins = 50, fill = "steelblue", color = "black") +
+  labs(title = "Distribution of Trip Distance (0–30 miles)", x = "Miles", y = "Trips")
+
+```
+
+```{r}
+# Avg fare by hour
+taxi_sample %>%
+group_by(hour) %>%
+summarize(avg_fare = mean(total_amount, na.rm = TRUE)) %>%
+ggplot(aes(hour, avg_fare)) +
+geom_line(color = "darkred") +
+labs(title = "Average Fare by Hour", x = "Hour", y = "Average Fare ($)")
+```
+
+```{r}
+# Number of trips by weekday
+taxi_sample %>%
+group_by(weekday) %>%
+summarize(trip_count = n()) %>%
+ggplot(aes(weekday, trip_count)) +
+geom_col(fill = "darkgreen") +
+labs(title = "Number of Trips by Weekday", x = "Day", y = "Trips")
+```
+
+```{r}
+## Total Fare Distribution
+
+# Filter to remove zero fares and extreme outliers
+
+taxi_sample%>%
+  filter(total_amount > 0, total_amount<=100)%>%
+  ggplot(
+       aes(total_amount)) +
+  geom_histogram(bins = 50, fill = "steelblue", color = "black") +
+  labs(title = "Distribution of Fares", x = "Fare ($)", y = "Trips")
+
+taxi_sample$tip_amount<-taxi_sample$total_amount-taxi_sample$fare_amount
+
+## Tip Amount Distribution
+
+taxi_sample %>%
+  filter(tip_amount >= 0, tip_amount <= 20) %>%
+  ggplot(aes(tip_amount)) +
+  geom_histogram(bins = 20, fill = "orange", color = "black") +
+  labs(
+    title = "Distribution of Tip Amount",
+    x = "Tip ($)",
+    y = "Number of Trips"
+  )
+```
